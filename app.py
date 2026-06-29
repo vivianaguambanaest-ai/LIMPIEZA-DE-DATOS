@@ -16,14 +16,14 @@ st.title("📊 Dashboard Estilo Power BI - Big Data")
 # =========================
 # CONEXIÓN MYSQL
 # =========================
-conexion = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="vivi.2006",
-    database="bd_lavadora"
-)
+#conexion = mysql.connector.connect(
+#    host="localhost",
+#    user="root",
+#    password="vivi.2006",
+#    database="bd_lavadora"
+#)
 
-df_base = pd.read_sql("SELECT * FROM cliente", con=conexion)
+#df_base = pd.read_sql("SELECT * FROM cliente", con=conexion)
 
 df = pd.read_csv("datos_practica.csv")
 df = pd.read_csv("datos_practica.csv")
