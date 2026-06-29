@@ -26,12 +26,16 @@ st.title("📊 Dashboard Estilo Power BI - Big Data")
 #df_base = pd.read_sql("SELECT * FROM cliente", con=conexion)
 
 df = pd.read_csv("datos_practica.csv")
-df = pd.read_csv("datos_practica.csv")
 
 # Convertir Edad a número y eliminar filas con Edad vacía o None
 df["Edad"] = pd.to_numeric(df["Edad"], errors="coerce")
 df = df.dropna(subset=["Edad"])
 
+# Convertir Salario a numérico
+df["Salario"] = pd.to_numeric(df["Salario"], errors="coerce")
+
+# Eliminar filas con nulos en Edad, Salario y Ciudad
+df = df.dropna(subset=["Edad", "Salario", "Ciudad"])
 # =========================
 # MENÚ LATERAL (POWER BI STYLE)
 # =========================
@@ -87,37 +91,37 @@ elif menu == "🧹 Limpieza de Datos":
 
     st.header("Limpieza de Datos")
 
-    st.subheader("Eliminar nulos")
-    df = df.dropna()
-    st.dataframe(df)
+    # Convertir columnas numéricas
+    st.subheader("Transformar valores a numéricos")
+    df["Edad"] = pd.to_numeric(df["Edad"], errors="coerce")
+    df["Salario"] = pd.to_numeric(df["Salario"], errors="coerce")
 
-    st.subheader("Reemplazar nulos (media)")
-    df = df.fillna(df.mean(numeric_only=True))
-    st.dataframe(df)
+    # Contar valores nulos
+    st.subheader("Contar valores nulos")
+    st.write(df.isnull().sum())
 
+    # Mostrar registros con Edad nula
+    st.subheader("Registros con Edad nula")
+    st.dataframe(df[df["Edad"].isnull()])
+
+    # Reemplazar Edad con la media
+    st.subheader("Reemplazar Edad nula con la media")
+    df["Edad"] = df["Edad"].fillna(df["Edad"].mean())
+
+    # Eliminar filas donde Salario sea nulo
+    df = df.dropna(subset=["Salario"])
+
+    # Eliminar filas donde Ciudad sea nula
+    df = df.dropna(subset=["Ciudad"])
+    st.write(df.loc[df["ID"] == 16])
+    st.write(df.loc[df["ID"] == 11])
+    # Eliminar duplicados
     st.subheader("Eliminar duplicados")
     df = df.drop_duplicates()
-    st.dataframe(df)
 
-    st.subheader("Eliminar valores NONE")
-    df = df.dropna(subset="Edad")
+    # Mostrar resultado final
+    st.subheader("Datos después de la limpieza")
     st.dataframe(df)
-    #Transformar los valores numericos 
-    st.subheader("Transformar valores a numericos")
-    df["Edad"]=pd.to_numeric(df["Edad"],errors="coerce")
-    st.dataframe(df)
-    #Contar cuantos NONE
-    st.subheader("Contar valores NULOS")
-    st.write(df["Edad"].isnull().sum())
-    #Buscar si en edad hay valores none
-    st.subheader("Buscar valores none en la columna edad")
-    st.write(df[df["Edad"].isnull()])
-    #Eliminar la fila 5 
-    st.subheader("Eliminar la fila 5")
-    st.dataframe(df)
-    #Reemplazar la edad con la media
-    st.subheader("Reemplazar valores  NONE con la media")
-    df["Edad"]=df["Edad"].fillna(df["Edad"].mean())
 
 # =========================================================
 # 🔄 TRANSFORMACIÓN DE DATOS
